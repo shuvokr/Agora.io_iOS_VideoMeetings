@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import AgoraRtcEngineKit
+import AgoraRtcKit
 
 class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
@@ -16,9 +16,9 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var muteButton: UIButton!
     @IBOutlet weak var hangUpButton: UIButton!
     
-    let appID = "YourAppIDHere"
+    let appID: String = <#Agora App ID#>
     var agoraKit: AgoraRtcEngineKit?
-    let tempToken: String? = nil
+    let tempToken: String? = <#Agora Temp Token#>
     var userID: UInt = 0
     var userName: String? = nil
     var channelName = "default"

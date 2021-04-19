@@ -6,7 +6,7 @@ target 'AgoraDemo' do
   use_frameworks!
 
   # Pods for AgoraDemo
-  pod 'AgoraRtcEngine_iOS'
+  pod 'AgoraRtcEngine_iOS', '3.4.0'
 
   target 'AgoraDemoTests' do
     inherit! :search_paths
