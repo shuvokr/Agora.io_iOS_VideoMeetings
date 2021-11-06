@@ -15,13 +15,14 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     @IBOutlet weak var localVideoView: UIView!
     @IBOutlet weak var muteButton: UIButton!
     @IBOutlet weak var hangUpButton: UIButton!
+    @IBOutlet weak var remoteVideoView: UIView!
     
-    let appID: String = <#Agora App ID#>
+    let appID: String = "a49308ba7e0e4edaa09b37183e178769"
     var agoraKit: AgoraRtcEngineKit?
-    let tempToken: String? = <#Agora Temp Token#>
+    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IACaWPl7LmQi7rDaBoiRHvknaKcadhJfhPHrCaWGXA/P6Qx+f9gAAAAAEADJaQ2G4W6GYQEAAQDdboZh"
     var userID: UInt = 0
     var userName: String? = nil
-    var channelName = "default"
+    var channelName = "test"
     var remoteUserIDs: [UInt] = []
     
     var muted = false {
@@ -34,9 +35,21 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
         }
     }
     
+    var hanguped = false {
+        didSet {
+            if hanguped {
+                hangUpButton.setTitle("Join", for: .normal)
+            }
+            else {
+                hangUpButton.setTitle("Hang Up", for: .normal)
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        print("AgoraVideoViewController!!!")
         // Do any additional setup after loading the view.
         setUpVideo()
         joinChannel()
@@ -53,15 +66,24 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     func joinChannel() {
+        agoraKit?.setDefaultAudioRouteToSpeakerphone(true)
         localVideoView.isHidden = false
         
         if let name = userName {
+            print("if let name = userName")
             getAgoraEngine().joinChannel(byUserAccount: name, token: tempToken, channelId: channelName) { [weak self] (sid, uid, elapsed) in
                 self?.userID = uid
+                print(self?.userID)
+                print("#####################")
             }
         } else {
+            print("getAgoraEngine()")
             getAgoraEngine().joinChannel(byToken: tempToken, channelId: channelName, info: nil, uid: userID) { [weak self] (sid, uid, elapsed) in
                 self?.userID = uid
+                print(sid)
+                print(uid)
+                print(elapsed)
+                print("sdkfjs;ldfjs;ldjf;lsdjfl;sjdkf")
             }
         }
     }
@@ -84,7 +106,13 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     }
     
     @IBAction func didTapHangUp(_ sender: Any) {
-        leaveChannel()
+        if hanguped {
+            joinChannel()
+        }
+        else {
+            leaveChannel()
+        }
+        hanguped = !hanguped
     }
     
     func leaveChannel() {
@@ -106,6 +134,7 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
             let videoCanvas = AgoraRtcVideoCanvas()
             videoCanvas.uid = remoteID
             videoCanvas.view = videoCell.videoView
+            videoCanvas.view = self.remoteVideoView
             videoCanvas.renderMode = .fit
             getAgoraEngine().setupRemoteVideo(videoCanvas)
             
