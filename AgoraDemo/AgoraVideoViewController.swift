@@ -165,18 +165,21 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
 
 extension AgoraVideoViewController: AgoraRtcEngineDelegate {
     func rtcEngine(_ engine: AgoraRtcEngineKit, didJoinedOfUid uid: UInt, elapsed: Int) {
+        print("All joined users uid list append from this point.")
         remoteUserIDs.append(uid)
         collectionView.reloadData()
     }
     
     //Sometimes, user info isn't immediately available when a remote user joins - if we get it later, reload their nameplate.
     func rtcEngine(_ engine: AgoraRtcEngineKit, didUpdatedUserInfo userInfo: AgoraUserInfo, withUid uid: UInt) {
+        print("Sometimes, user info isn't immediately available when a remote user joins - if we get it later, reload their nameplate.")
         if let index = remoteUserIDs.first(where: { $0 == uid }) {
             collectionView.reloadItems(at: [IndexPath(item: Int(index), section: 0)])
         }
     }
     
     func rtcEngine(_ engine: AgoraRtcEngineKit, didOfflineOfUid uid: UInt, reason: AgoraUserOfflineReason) {
+        print("If a uusers offlined then remove their uid from this point.")
         if let index = remoteUserIDs.firstIndex(where: { $0 == uid }) {
             remoteUserIDs.remove(at: index)
             collectionView.reloadData()
