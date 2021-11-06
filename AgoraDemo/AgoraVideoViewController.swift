@@ -4,7 +4,9 @@
 //
 //  Created by Jonathan Fotland on 9/23/19.
 //  Copyright © 2019 Jonathan Fotland. All rights reserved.
-//
+//  Agora.io official implimentation - iOS: https://docs.agora.io/en/Voice/start_live_ios
+//  Agora.io official implimentation - iOS: https://docs.agora.io/en/Voice/start_live_android
+//  Generate agora.io token: https://medium.com/agora-io/2-click-setup-testing-token-server-b1c6fea9e1ad
 
 import UIKit
 import AgoraRtcKit
@@ -19,7 +21,7 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     
     let appID: String = "a49308ba7e0e4edaa09b37183e178769"
     var agoraKit: AgoraRtcEngineKit?
-    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IACaWPl7LmQi7rDaBoiRHvknaKcadhJfhPHrCaWGXA/P6Qx+f9gAAAAAEADJaQ2G4W6GYQEAAQDdboZh"
+    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IABoQRqi4Q0DO1HPfgO6WQ7HI4Zyj3zekavGvtVe+a47ewx+f9gAAAAAEADJaQ2G0OOHYQEAAQDO44dh"
     var userID: UInt = 0
     var userName: String? = nil
     var channelName = "test"
