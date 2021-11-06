@@ -2,8 +2,8 @@
 //  AgoraVideoViewController.swift
 //  AgoraDemo
 //
-//  Created by Jonathan Fotland on 9/23/19.
-//  Copyright © 2019 Jonathan Fotland. All rights reserved.
+//  Created by MonkeyMan on 9/23/19.
+//  Copyright © 2019 MonkeyMan. All rights reserved.
 //  Agora.io official implimentation - iOS: https://docs.agora.io/en/Voice/start_live_ios
 //  Agora.io official implimentation - iOS: https://docs.agora.io/en/Voice/start_live_android
 //  Generate agora.io token: https://medium.com/agora-io/2-click-setup-testing-token-server-b1c6fea9e1ad

@@ -2,8 +2,8 @@
 //  VideoCollectionViewCell.swift
 //  AgoraDemo
 //
-//  Created by Jonathan Fotland on 9/23/19.
-//  Copyright © 2019 Jonathan Fotland. All rights reserved.
+//  Created by MonkeyMan on 9/23/19.
+//  Copyright © 2019 MonkeyMan. All rights reserved.
 //
 
 import UIKit
