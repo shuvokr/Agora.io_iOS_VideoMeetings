@@ -1,6 +1,7 @@
 PODS:
   - AgoraRtcEngine_iOS (3.4.0)
   - Alamofire (5.4.4)
+  - FNineSeven (0.2.1)
   - SwiftyCrypto (0.0.1)
   - SwiftyJSON (5.0.1)
   - SwiftyJWT (0.0.3):
@@ -9,6 +10,7 @@ PODS:
 DEPENDENCIES:
   - AgoraRtcEngine_iOS (= 3.4.0)
   - Alamofire
+  - FNineSeven
   - SwiftyJSON
   - SwiftyJWT
 
@@ -16,6 +18,7 @@ SPEC REPOS:
   trunk:
     - AgoraRtcEngine_iOS
     - Alamofire
+    - FNineSeven
     - SwiftyCrypto
     - SwiftyJSON
     - SwiftyJWT
@@ -23,10 +26,11 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   AgoraRtcEngine_iOS: 7d78e5c8e1ac37af3dc0e9d83961e651c8f62c15
   Alamofire: f3b09a368f1582ab751b3fff5460276e0d2cf5c9
+  FNineSeven: 104be2b40f899a4416e19708498b84b0d67914d2
   SwiftyCrypto: ab59cdb153a7ca99b657fa8d9ebd2ebbd7694bbe
   SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   SwiftyJWT: e46e8457138c6567a1a9ff05a6efc8ef678c1187
 
-PODFILE CHECKSUM: 0fe30c2b6a4081a2f7df487bd360ee9f5664ed4b
+PODFILE CHECKSUM: 73f1fd19c1edb7f8422d0fa6ee26a778cfc47911
 
 COCOAPODS: 1.11.2
