@@ -10,6 +10,10 @@
 
 import UIKit
 import AgoraRtcKit
+import Alamofire
+import SwiftyJWT
+import FNineSeven
+import SwiftyJSON
 
 class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
@@ -214,18 +218,40 @@ extension AgoraVideoViewController {
 
 extension AgoraVideoViewController {
     private func generateAgoraioRTCToken(channel: String, isPublisher: Bool) {
-        let urlTo = URL(string: "http://localhost:3000/rtctoken")!
-        print("ppppooooooooooo = \(urlTo)")
-        let parameters: [String: Any] = [
-            "channel":channel,
-            "isPublisher":isPublisher
-        ]
         
-        let headers: HTTPHeaders = [
-            "Content-Type":"application/json",
-            "Accept": "application/json"
-        ]
-       
+        let urlTo = URL(string: "https://dev.lifeplusbd.tech/lpbd/api-firebase/video-call-request.php")!
+        let parameters = [
+            "accesskey" : "90336",
+            "get_vieocall_token" : "1",
+            "channel_name": self.chanelNameTF.text!,
+            "uid": self.idTF.text!
+        ] as [String : Any]
+        var headers: HTTPHeaders = HTTPHeaders()
+        
+        var jwtTokenTime = NineSeven00().jwtTokenTime()
+        if jwtTokenTime == "" {
+            self.setJwtKey(issuer: "eKart", subject: "eKart Authentication")
+            jwtTokenTime = NineSeven00().jwtTokenTime()
+        }
+        let currentTime = NineSeven00().getCurrentTime()
+        print(currentTime)
+        let diff = NineSeven00().timeDiff(currentTime: currentTime, savedTime: jwtTokenTime)
+        let isValidToken = diff > -170 && diff < 0 ? true : false
+        print(diff)
+        
+        
+        if isValidToken {
+        }
+        else {
+            self.setJwtKey(issuer: "eKart", subject: "eKart Authentication")
+        }
+        
+        DispatchQueue.main.async {
+            headers = [
+                "Authorization": "Bearer \(String(describing: NineSeven00().getJWTKeyID()!))"
+            ]
+        }
+        
         DispatchQueue.main.async {
             AF.request(
                 urlTo,
@@ -241,6 +267,7 @@ extension AgoraVideoViewController {
                         let jsonData = JSON(json as Any)
                         guard let statusCode = response.response?.statusCode else { return }
                         if(statusCode == 200) {
+                            print("#######################################")
                             print(parameters)
                             print(jsonData)
                         }
