@@ -13,6 +13,8 @@ import AgoraRtcKit
 
 class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
 
+    @IBOutlet weak var chanelNameTF: UITextField!
+    @IBOutlet weak var idTF: UITextField!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var localVideoView: UIView!
     @IBOutlet weak var muteButton: UIButton!
