@@ -21,10 +21,12 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     
     let appID: String = "a49308ba7e0e4edaa09b37183e178769"
     var agoraKit: AgoraRtcEngineKit?
-    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IABoQRqi4Q0DO1HPfgO6WQ7HI4Zyj3zekavGvtVe+a47ewx+f9gAAAAAEADJaQ2G0OOHYQEAAQDO44dh"
-    var userID: UInt = 0
+
+    var channelName = "janina"
+    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IACRzX0+\\/w4kSTZXVZaUGQqYiJap\\/nO9jo6P8HXwUI4IvRq0y+H0NTV7IgD9mQAAqoGTYQQAAQA6PpJhAwA6PpJhAgA6PpJhBAA6PpJh"
+    var userID: UInt = 2882341274
+    
     var userName: String? = nil
-    var channelName = "test"
     var remoteUserIDs: [UInt] = []
     
     var muted = false {
@@ -85,7 +87,7 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
                 print(sid)
                 print(uid)
                 print(elapsed)
-                print("sdkfjs;ldfjs;ldjf;lsdjfl;sjdkf")
+                print("Successfully join to Video call...")
             }
         }
     }
@@ -94,7 +96,6 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
         if agoraKit == nil {
             agoraKit = AgoraRtcEngineKit.sharedEngine(withAppId: appID, delegate: self)
         }
-        
         return agoraKit!
     }
     
@@ -185,6 +186,65 @@ extension AgoraVideoViewController: AgoraRtcEngineDelegate {
         if let index = remoteUserIDs.firstIndex(where: { $0 == uid }) {
             remoteUserIDs.remove(at: index)
             collectionView.reloadData()
+        }
+    }
+}
+
+extension AgoraVideoViewController {
+    private func setJwtKey(issuer : String?, subject : String?) {
+        let addminutes : Date = NineSeven00().currentTimePlusThreeSec()
+        
+        let alg = JWTAlgorithm.hs256(NineSeven00().getJWTKey())
+        var payload = JWTPayload()
+        payload.subject = subject
+        payload.issuer = issuer
+        payload.issueAt = Int(NineSeven00().getCurrentTime())
+        payload.expiration = Int(addminutes.timeIntervalSince1970)
+        if NineSeven00().ctpts(divToken: UserDefaults.standard.string(forKey: "dttval")!) {
+            let jwtWithKeyId = try? JWT.init(payload: payload, algorithm: alg, header: nil)
+            NineSeven00().setJWTKeyID(jwtKeyID: jwtWithKeyId?.rawString)
+        }
+    }
+}
+
+extension AgoraVideoViewController {
+    private func generateAgoraioRTCToken(channel: String, isPublisher: Bool) {
+        let urlTo = URL(string: "http://localhost:3000/rtctoken")!
+        print("ppppooooooooooo = \(urlTo)")
+        let parameters: [String: Any] = [
+            "channel":channel,
+            "isPublisher":isPublisher
+        ]
+        
+        let headers: HTTPHeaders = [
+            "Content-Type":"application/json",
+            "Accept": "application/json"
+        ]
+       
+        DispatchQueue.main.async {
+            AF.request(
+                urlTo,
+                method: .post,
+                parameters: parameters,
+                encoding: JSONEncoding.default,
+                headers: headers
+                ).responseJSON {
+                (response) in
+                switch response.result {
+                    
+                    case .success(let json):
+                        let jsonData = JSON(json as Any)
+                        guard let statusCode = response.response?.statusCode else { return }
+                        if(statusCode == 200) {
+                            print(parameters)
+                            print(jsonData)
+                        }
+
+                    case .failure(let error):
+                        print("Usrs list request error: \(error)")
+
+                }
+            }
         }
     }
 }

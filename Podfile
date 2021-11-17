@@ -7,6 +7,9 @@ target 'AgoraDemo' do
 
   # Pods for AgoraDemo
   pod 'AgoraRtcEngine_iOS', '3.4.0'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
+  pod 'SwiftyJWT'
 
   target 'AgoraDemoTests' do
     inherit! :search_paths
