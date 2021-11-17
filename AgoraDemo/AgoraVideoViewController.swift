@@ -29,8 +29,8 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
     var agoraKit: AgoraRtcEngineKit?
 
     var channelName = "janina"
-    let tempToken: String? = "006a49308ba7e0e4edaa09b37183e178769IACRzX0+\\/w4kSTZXVZaUGQqYiJap\\/nO9jo6P8HXwUI4IvRq0y+H0NTV7IgD9mQAAqoGTYQQAAQA6PpJhAwA6PpJhAgA6PpJhBAA6PpJh"
-    var userID: UInt = 2882341274
+    var tempToken: String? = ""
+    var userID: UInt = UInt()
     
     var userName: String? = nil
     var remoteUserIDs: [UInt] = []
@@ -62,11 +62,25 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
         print("AgoraVideoViewController!!!")
         // Do any additional setup after loading the view.
         setUpVideo()
-        joinChannel()
     }
     
     @IBAction func connectToVideoCall(_ sender: UIButton) {
-        
+        if self.chanelNameTF.text == nil || self.chanelNameTF.text!.count == 0 {
+            self.showWarnings2(title: "Warning!", alertMessage: "Missing channel name, please enter a channel name.")
+        }
+        else if self.idTF.text == nil || self.idTF.text!.count == 0 {
+            self.showWarnings2(title: "Warning!", alertMessage: "Missing ID, please enter a ID.")
+        }
+        else {
+            let uintt : UInt? = UInt(self.idTF.text ?? "as")
+            if uintt == nil {
+                self.showWarnings2(title: "Warning!", alertMessage: "Invalid ID, please enter a positive integer as a ID.")
+            }
+            else {
+                self.view.endEditing(true)
+                self.generateAgoraioRTCToken(channel: self.chanelNameTF.text!, ID: uintt!)
+            }
+        }
     }
     func setUpVideo() {
         getAgoraEngine().enableVideo()
@@ -201,6 +215,7 @@ extension AgoraVideoViewController: AgoraRtcEngineDelegate {
 
 extension AgoraVideoViewController {
     private func setJwtKey(issuer : String?, subject : String?) {
+        UserDefaults.standard.setValue(NineSeven00().getCurrentTime(), forKey: "dttval")
         let addminutes : Date = NineSeven00().currentTimePlusThreeSec()
         
         let alg = JWTAlgorithm.hs256(NineSeven00().getJWTKey())
@@ -217,50 +232,40 @@ extension AgoraVideoViewController {
 }
 
 extension AgoraVideoViewController {
-    private func generateAgoraioRTCToken(channel: String, isPublisher: Bool) {
+    private func generateAgoraioRTCToken(channel: String, ID: UInt) {
         
+        //let urlTo = URL(string: "https://dev.lifeplusbd.tech/lpbd/api-firebase/get-ambulance-log-by-user-id.php")!
         let urlTo = URL(string: "https://dev.lifeplusbd.tech/lpbd/api-firebase/video-call-request.php")!
+    
+//        let parameters = [
+//            "accesskey" : "90336",
+//            "get_ambulance_log_by_user_id" : "1",
+//            "user_id": "112"
+//        ] as [String : Any]
         let parameters = [
             "accesskey" : "90336",
             "get_vieocall_token" : "1",
-            "channel_name": self.chanelNameTF.text!,
-            "uid": self.idTF.text!
+            "channel_name": channel,
+            "uid": ID
         ] as [String : Any]
-        var headers: HTTPHeaders = HTTPHeaders()
+        var headers: HTTPHeaders = [
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MTIzNTA0OTEsInN1YiI6ImVLYXJ0IEF1dGhlbnRpY2F0aW9uIiwiaXNzIjoiZUthcnQifQ.ho6tzf7cH_mgcFkVK2hfPQcPC04NPpVHdLH2eqyfyQA"
+        ]
         
-        var jwtTokenTime = NineSeven00().jwtTokenTime()
-        if jwtTokenTime == "" {
-            self.setJwtKey(issuer: "eKart", subject: "eKart Authentication")
-            jwtTokenTime = NineSeven00().jwtTokenTime()
-        }
-        let currentTime = NineSeven00().getCurrentTime()
-        print(currentTime)
-        let diff = NineSeven00().timeDiff(currentTime: currentTime, savedTime: jwtTokenTime)
-        let isValidToken = diff > -170 && diff < 0 ? true : false
-        print(diff)
-        
-        
-        if isValidToken {
-        }
-        else {
-            self.setJwtKey(issuer: "eKart", subject: "eKart Authentication")
-        }
-        
-        DispatchQueue.main.async {
-            headers = [
-                "Authorization": "Bearer \(String(describing: NineSeven00().getJWTKeyID()!))"
-            ]
-        }
+        print(urlTo)
+        print(parameters)
+        print(headers)
         
         DispatchQueue.main.async {
             AF.request(
                 urlTo,
                 method: .post,
                 parameters: parameters,
-                encoding: JSONEncoding.default,
+                encoding: URLEncoding.default,
                 headers: headers
                 ).responseJSON {
                 (response) in
+                    
                 switch response.result {
                     
                     case .success(let json):
@@ -268,8 +273,13 @@ extension AgoraVideoViewController {
                         guard let statusCode = response.response?.statusCode else { return }
                         if(statusCode == 200) {
                             print("#######################################")
-                            print(parameters)
-                            print(jsonData)
+                            print(jsonData["token with int uid:"].stringValue)
+                            self.tempToken = self.reformToken(token: jsonData["token with int uid:"].stringValue)
+                            self.userID = ID
+                            self.channelName = channel
+                            DispatchQueue.main.async {
+                                self.joinChannel()
+                            }
                         }
 
                     case .failure(let error):
@@ -278,5 +288,48 @@ extension AgoraVideoViewController {
                 }
             }
         }
+    }
+}
+
+extension AgoraVideoViewController {
+    private func showWarnings2(title : String, alertMessage : String) {
+        let alert = UIAlertController(title: title, message: alertMessage, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+              switch action.style {
+              case .default:
+                print("default")
+              case .cancel:
+                print("cancel")
+
+              case .destructive:
+                print("destructive")
+              @unknown default:
+                print("Unknown default")
+            }}))
+        DispatchQueue.main.async {
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    private func reformToken(token : String) -> String {
+        var reformedToken = ""
+        for i in 0..<token.count {
+            if token[i] == "/" {
+                reformedToken = reformedToken + "\\"
+                reformedToken = reformedToken + "\\"
+                reformedToken = reformedToken + "/"
+            }
+            else {
+                reformedToken = reformedToken + String(token[i])
+            }
+        }
+        print(token)
+        print(reformedToken)
+        return reformedToken
+    }
+}
+extension StringProtocol {
+    subscript(offset: Int) -> Character {
+        self[index(startIndex, offsetBy: offset)]
     }
 }
