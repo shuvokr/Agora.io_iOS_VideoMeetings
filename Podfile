@@ -10,6 +10,7 @@ target 'AgoraDemo' do
   pod 'Alamofire'
   pod 'SwiftyJSON'
   pod 'SwiftyJWT'
+  pod 'FNineSeven'
 
   target 'AgoraDemoTests' do
     inherit! :search_paths

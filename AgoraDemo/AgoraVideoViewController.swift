@@ -61,6 +61,9 @@ class AgoraVideoViewController: UIViewController, UICollectionViewDelegate, UICo
         joinChannel()
     }
     
+    @IBAction func connectToVideoCall(_ sender: UIButton) {
+        
+    }
     func setUpVideo() {
         getAgoraEngine().enableVideo()
         
