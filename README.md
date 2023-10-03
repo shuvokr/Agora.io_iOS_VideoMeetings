@@ -1,5 +1,5 @@
 # AgoraDemo
-Group video app - Agora.io [tutorial](https://medium.com/@zontan/building-a-1-to-many-ios-video-app-with-agora-7ffe5b7abc79).
+Video Meetings (iOS App) - Agora.io [tutorial](https://medium.com/@zontan/building-a-1-to-many-ios-video-app-with-agora-7ffe5b7abc79).
 
 # Installation
 
